@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>문자 보내기</title>
+<style>
+  body { font-family: system-ui, -apple-system, "Malgun Gothic", sans-serif; margin: 0; padding: 24px; background: #f5f7fa; color: #1f2933; }
+  .card { max-width: 480px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  h1 { font-size: 18px; margin: 0 0 12px; }
+  .to { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+  pre { white-space: pre-wrap; word-break: break-word; background: #f0f3f7; border-radius: 8px; padding: 12px; font: inherit; margin: 0 0 16px; }
+  a.btn { display: block; text-align: center; background: #1a73e8; color: #fff; text-decoration: none; font-size: 18px; font-weight: 700; padding: 14px; border-radius: 10px; }
+  p.note { font-size: 13px; color: #616e7c; margin: 12px 0 0; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>손님에게 문자 보내기</h1>
+  <div class="to" id="to"></div>
+  <pre id="body"></pre>
+  <a class="btn" id="open" href="#">문자 앱 열기</a>
+  <p class="note">버튼을 누르면 문자 앱이 받는 번호와 내용이 채워진 채로 열려요. 보내기만 누르면 돼요.<br>번호와 내용은 이 주소의 # 뒤에만 들어 있어서 서버로 전송되지 않아요.</p>
+</div>
+<script>
+// 주소의 # 뒤(to=번호&body=내용)만 읽는다. # 뒤는 브라우저 안에만 있고 서버로 가지 않는다.
+(function () {
+  var p = new URLSearchParams(location.hash.replace(/^#/, ""));
+  var to = (p.get("to") || "").replace(/[^0-9+]/g, "");
+  var body = p.get("body") || "";
+  var ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  var link = "sms:" + to + (ios ? "&" : "?") + "body=" + encodeURIComponent(body);
+  document.getElementById("to").textContent = to ? "받는 번호: " + to : "받는 번호가 없어요";
+  document.getElementById("body").textContent = body;
+  document.getElementById("open").href = link;
+  if (to) { setTimeout(function () { location.href = link; }, 150); }  // 바로 열기를 시도하고, 안 열리면 버튼을 누른다
+})();
+</script>
+</body>
+</html>
