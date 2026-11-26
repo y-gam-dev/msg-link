@@ -27,10 +27,10 @@
 // 주소의 # 뒤(to=번호&body=내용)만 읽는다. # 뒤는 브라우저 안에만 있고 서버로 가지 않는다.
 (function () {
   var p = new URLSearchParams(location.hash.replace(/^#/, ""));
-  var to = (p.get("to") || "").replace(/[^0-9+]/g, "");
+  var to = (p.get("to") || "").replace(/[^0-9+*#]/g, "");  // 투넘버로 보낼 때 붙이는 * 와 # 도 받는다
   var body = p.get("body") || "";
   var ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
-  var link = "sms:" + to + (ios ? "&" : "?") + "body=" + encodeURIComponent(body);
+  var link = "sms:" + encodeURIComponent(to) + (ios ? "&" : "?") + "body=" + encodeURIComponent(body);
   document.getElementById("to").textContent = to ? "받는 번호: " + to : "받는 번호가 없어요";
   document.getElementById("body").textContent = body;
   document.getElementById("open").href = link;
