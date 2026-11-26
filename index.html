@@ -21,7 +21,7 @@
   <div class="to" id="to"></div>
   <pre id="body"></pre>
   <a class="btn" id="open" href="#">문자 앱 열기</a>
-  <p class="note">버튼을 누르면 문자 앱이 받는 번호와 내용이 채워진 채로 열려요. 보내기만 누르면 돼요.<br>번호와 내용은 이 주소의 # 뒤에만 들어 있어서 서버로 전송되지 않아요.</p>
+  <p class="note">화면 아무 곳이나 누르면 문자 앱이 받는 번호와 내용이 채워진 채로 열려요. 보내기만 누르면 돼요.<br>번호와 내용은 이 주소의 # 뒤에만 들어 있어서 서버로 전송되지 않아요.</p>
 </div>
 <script>
 // 주소의 # 뒤(to=번호&body=내용)만 읽는다. # 뒤는 브라우저 안에만 있고 서버로 가지 않는다.
@@ -34,7 +34,12 @@
   document.getElementById("to").textContent = to ? "받는 번호: " + to : "받는 번호가 없어요";
   document.getElementById("body").textContent = body;
   document.getElementById("open").href = link;
-  if (to) { setTimeout(function () { location.href = link; }, 150); }  // 바로 열기를 시도하고, 안 열리면 버튼을 누른다
+  if (to) {
+    setTimeout(function () { location.href = link; }, 150);  // 바로 열기를 시도한다. 브라우저가 막으면 아래처럼 한 번 누른다.
+    document.addEventListener("click", function (e) {            // 버튼을 정확히 안 눌러도 화면 어디든 누르면 열린다
+      if (!e.target.closest("#open")) { location.href = link; }
+    });
+  }
 })();
 </script>
 </body>
